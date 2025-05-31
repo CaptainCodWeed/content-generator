@@ -11,6 +11,8 @@ export type Database = {
     Tables: {
       generated_content: {
         Row: {
+          ai_image_style: string
+          content_language: string
           content_style: string
           created_at: string
           generated_content: string | null
@@ -25,6 +27,8 @@ export type Database = {
           webhook_response: Json | null
         }
         Insert: {
+          ai_image_style?: string
+          content_language?: string
           content_style: string
           created_at?: string
           generated_content?: string | null
@@ -39,6 +43,8 @@ export type Database = {
           webhook_response?: Json | null
         }
         Update: {
+          ai_image_style?: string
+          content_language?: string
           content_style?: string
           created_at?: string
           generated_content?: string | null
