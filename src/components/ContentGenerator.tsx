@@ -7,7 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import GeneratedContent from "./GeneratedContent";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sparkles, FileText, Globe, Image, Palette } from "lucide-react";
 
@@ -83,53 +82,26 @@ const ContentGenerator = () => {
 
     try {
       const requestData = {
-        title,
-        headings,
-        keywords,
-        imageType,
-        aiImageStyle,
-        contentLanguage,
-        contentStyle,
-      };
-
-      // Save to database first
-      const { data: savedContent, error: dbError } = await supabase
-        .from('generated_content')
-        .insert({
+        table_name: "generated_content",
+        fields: {
           user_id: user?.id,
-          title,
-          headings,
-          keywords,
+          title: title,
+          headings: headings,
+          keywords: keywords,
           image_type: imageType,
           ai_image_style: aiImageStyle,
           content_language: contentLanguage,
           content_style: contentStyle,
-        })
-        .select()
-        .single();
+        },
+        timestamp: new Date().toISOString(),
+      };
 
-      if (dbError) {
-        throw new Error('خطا در ذخیره اطلاعات: ' + dbError.message);
-      }
-
-      // Send to n8n webhook
-      const response = await fetch('https://captaincodem.app.n8n.cloud/webhook/cedc017c-fa8d-41f4-9612-6306575ccb1ehttps://captaincodem.app.n8n.cloud/webhook/cedc017c-fa8d-41f4-9612-6306575ccb1e', {
-        method: 'GET',
+      const response = await fetch('https://captaincodem.app.n8n.cloud/webhook-test/cedc017c-fa8d-41f4-9612-6306575ccb1e', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          title: title,
-          headings: headings,
-          keywords: keywords,
-          imageType: imageType,
-          aiImageStyle: aiImageStyle,
-          contentLanguage: contentLanguage,
-          contentStyle: contentStyle,
-          userId: user?.id,
-          timestamp: new Date().toISOString(),
-          recordId: savedContent.id
-        }),
+        body: JSON.stringify(requestData),
       });
 
       if (!response.ok) {
@@ -137,22 +109,6 @@ const ContentGenerator = () => {
       }
 
       const result = await response.json();
-
-      // Update the database record with the response
-      const { error: updateError } = await supabase
-        .from('generated_content')
-        .update({
-          generated_content: result.content,
-          image_prompt: result.imagePrompt,
-          webhook_response: result,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', savedContent.id);
-
-      if (updateError) {
-        console.error('خطا در به‌روزرسانی:', updateError);
-      }
-
       setGeneratedContent(result);
 
       toast({
@@ -180,13 +136,19 @@ const ContentGenerator = () => {
 
     try {
       const requestData = {
-        title,
-        headings,
-        keywords,
-        imageType,
-        aiImageStyle,
-        contentLanguage,
-        contentStyle,
+        table_name: "generated_content",
+        fields: {
+          user_id: user?.id,
+          title: title,
+          headings: headings,
+          keywords: keywords,
+          image_type: imageType,
+          ai_image_style: aiImageStyle,
+          content_language: contentLanguage,
+          content_style: contentStyle,
+        },
+        timestamp: new Date().toISOString(),
+        isRegeneration: true
       };
 
       const response = await fetch('https://captaincodem.app.n8n.cloud/webhook-test/cedc017c-fa8d-41f4-9612-6306575ccb1e', {
@@ -194,18 +156,7 @@ const ContentGenerator = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          title: title,
-          headings: headings,
-          keywords: keywords,
-          imageType: imageType,
-          aiImageStyle: aiImageStyle,
-          contentLanguage: contentLanguage,
-          contentStyle: contentStyle,
-          userId: user?.id,
-          timestamp: new Date().toISOString(),
-          isRegeneration: true
-        }),
+        body: JSON.stringify(requestData),
       });
 
       if (!response.ok) {
