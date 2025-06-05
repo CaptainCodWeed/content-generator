@@ -46,6 +46,6 @@ export const generateContent = async (data: GenerateContentRequest): Promise<Gen
 
   const result = await response.json();
   console.log('Response data:', result);
-  
+
   return result;
 };
