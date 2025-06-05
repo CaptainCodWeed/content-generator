@@ -14,7 +14,7 @@ interface GenerateContentRequest {
 export interface GeneratedContentResponse {
   content: string;
   imagePrompt: string;
-},
+}
 
 const WEBHOOK_URL = 'http://localhost:5678/webhook-test/dc6df3e7-fcdf-41dd-a762-dcb2649fc01a';
 

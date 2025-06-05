@@ -13,7 +13,7 @@ interface ContentFormProps {
   onContentGenerated: (content: GeneratedContentResponse) => void;
 }
 
-const ContentForm: React.FC<ContentFormProps> = ({ onContentGenerated }) => {
+export const ContentForm: React.FC<ContentFormProps> = ({ onContentGenerated }) => {
   const [title, setTitle] = useState("");
   const [headings, setHeadings] = useState("");
   const [keywords, setKeywords] = useState("");
@@ -42,7 +42,7 @@ const ContentForm: React.FC<ContentFormProps> = ({ onContentGenerated }) => {
         content_language: contentLanguage,
         content_style: contentStyle,
       });
-      
+
       onContentGenerated(result);
 
       toast({
@@ -52,13 +52,13 @@ const ContentForm: React.FC<ContentFormProps> = ({ onContentGenerated }) => {
     } catch (err) {
       console.error('Error in handleSubmit:', err);
       let errorMessage = 'خطای نامشخص رخ داد';
-      
+
       if (err instanceof TypeError && err.message.includes('fetch')) {
         errorMessage = 'خطا در اتصال به سرور. لطفاً اتصال اینترنت خود را بررسی کنید.';
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }
-      
+
       setError(errorMessage);
       toast({
         title: "خطا",
