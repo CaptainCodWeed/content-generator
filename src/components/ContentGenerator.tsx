@@ -113,7 +113,7 @@ const ContentGenerator = () => {
       }
 
       // Send to n8n webhook
-      const response = await fetch('https://captaincodem.app.n8n.cloud/webhook-test/cedc017c-fa8d-41f4-9612-6306575ccb1e', {
+      const response = await fetch('https://captaincodem.app.n8n.cloud/webhook/cedc017c-fa8d-41f4-9612-6306575ccb1e', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ const ContentGenerator = () => {
       }
 
       const result = await response.json();
-      
+
       // Update the database record with the response
       const { error: updateError } = await supabase
         .from('generated_content')
@@ -154,7 +154,7 @@ const ContentGenerator = () => {
       }
 
       setGeneratedContent(result);
-      
+
       toast({
         title: "موفق!",
         description: "محتوا با موفقیت تولید شد",
@@ -378,8 +378,8 @@ const ContentGenerator = () => {
               </div>
 
               <div className="flex justify-center pt-6">
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isLoading}
                   size="lg"
                   className="px-12 py-4 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg transform hover:scale-105 transition-all duration-200"
@@ -414,8 +414,8 @@ const ContentGenerator = () => {
               imagePrompt={generatedContent.imagePrompt}
             />
             <div className="flex justify-center">
-              <Button 
-                onClick={handleRegenerate} 
+              <Button
+                onClick={handleRegenerate}
                 disabled={isLoading}
                 variant="outline"
                 size="lg"
