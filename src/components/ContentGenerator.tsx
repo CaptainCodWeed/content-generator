@@ -96,19 +96,28 @@ const ContentGenerator = () => {
         timestamp: new Date().toISOString(),
       };
 
+      console.log('Sending request to n8n webhook:', requestData);
+
       const response = await fetch('https://captaincodem.app.n8n.cloud/webhook-test/cedc017c-fa8d-41f4-9612-6306575ccb1e', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify(requestData),
+        mode: 'cors',
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+
       if (!response.ok) {
-        throw new Error(`خطا در درخواست: ${response.status}`);
+        throw new Error(`خطا در درخواست: ${response.status} - ${response.statusText}`);
       }
 
       const result = await response.json();
+      console.log('Response data:', result);
+      
       setGeneratedContent(result);
 
       toast({
@@ -116,7 +125,15 @@ const ContentGenerator = () => {
         description: "محتوا با موفقیت تولید شد",
       });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'خطای نامشخص رخ داد';
+      console.error('Error in handleSubmit:', err);
+      let errorMessage = 'خطای نامشخص رخ داد';
+      
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        errorMessage = 'خطا در اتصال به سرور. لطفاً اتصال اینترنت خود را بررسی کنید.';
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      
       setError(errorMessage);
       toast({
         title: "خطا",
@@ -151,26 +168,42 @@ const ContentGenerator = () => {
         isRegeneration: true
       };
 
+      console.log('Sending regeneration request to n8n webhook:', requestData);
+
       const response = await fetch('https://captaincodem.app.n8n.cloud/webhook-test/cedc017c-fa8d-41f4-9612-6306575ccb1e', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify(requestData),
+        mode: 'cors',
       });
 
+      console.log('Regeneration response status:', response.status);
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`خطا در درخواست: ${response.status} - ${response.statusText}`);
       }
 
       const result = await response.json();
+      console.log('Regeneration response data:', result);
+      
       setGeneratedContent(result);
       toast({
         title: "موفق!",
         description: "محتوا با موفقیت تولید شد",
       });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+      console.error('Error in handleRegenerate:', err);
+      let errorMessage = 'خطای نامشخص رخ داد';
+      
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        errorMessage = 'خطا در اتصال به سرور. لطفاً اتصال اینترنت خود را بررسی کنید.';
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      
       setError(errorMessage);
       toast({
         title: "خطا",
