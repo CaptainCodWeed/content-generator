@@ -16,7 +16,7 @@ export interface GeneratedContentResponse {
   imagePrompt: string;
 }
 
-const WEBHOOK_URL = 'https://captaincodem.app.n8n.cloud/webhook-test/cedc017c-fa8d-41f4-9612-6306575ccb1e';
+const WEBHOOK_URL = 'http://localhost:5678/webhook-test/dc6df3e7-fcdf-41dd-a762-dcb2649fc01a';
 
 export const generateContent = async (data: GenerateContentRequest): Promise<GeneratedContentResponse> => {
   const requestData = {
@@ -30,8 +30,7 @@ export const generateContent = async (data: GenerateContentRequest): Promise<Gen
   const response = await fetch(WEBHOOK_URL, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(requestData),
     mode: 'cors',
