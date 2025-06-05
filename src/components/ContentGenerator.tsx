@@ -113,7 +113,7 @@ const ContentGenerator = () => {
       }
 
       // Send to n8n webhook
-      const response = await fetch('https://captaincodem.app.n8n.cloud/webhook/8a32e120-322b-4015-aa4c-4f609571cf18', {
+      const response = await fetch('https://captaincodem.app.n8n.cloud/webhook/cedc017c-fa8d-41f4-9612-6306575ccb1ehttps://captaincodem.app.n8n.cloud/webhook/cedc017c-fa8d-41f4-9612-6306575ccb1e', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
