@@ -112,12 +112,24 @@ const ContentGenerator = () => {
         throw new Error('خطا در ذخیره اطلاعات: ' + dbError.message);
       }
 
-      const response = await fetch('https://your-n8n-server.com/webhook/content-generator', {
+      // Send to n8n webhook
+      const response = await fetch('https://captaincodem.app.n8n.cloud/webhook-test/cedc017c-fa8d-41f4-9612-6306575ccb1e', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestData),
+        body: JSON.stringify({
+          title: title,
+          headings: headings,
+          keywords: keywords,
+          imageType: imageType,
+          aiImageStyle: aiImageStyle,
+          contentLanguage: contentLanguage,
+          contentStyle: contentStyle,
+          userId: user?.id,
+          timestamp: new Date().toISOString(),
+          recordId: savedContent.id
+        }),
       });
 
       if (!response.ok) {
@@ -177,12 +189,23 @@ const ContentGenerator = () => {
         contentStyle,
       };
 
-      const response = await fetch('https://your-n8n-server.com/webhook/content-generator', {
+      const response = await fetch('https://captaincodem.app.n8n.cloud/webhook-test/cedc017c-fa8d-41f4-9612-6306575ccb1e', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestData),
+        body: JSON.stringify({
+          title: title,
+          headings: headings,
+          keywords: keywords,
+          imageType: imageType,
+          aiImageStyle: aiImageStyle,
+          contentLanguage: contentLanguage,
+          contentStyle: contentStyle,
+          userId: user?.id,
+          timestamp: new Date().toISOString(),
+          isRegeneration: true
+        }),
       });
 
       if (!response.ok) {
