@@ -1,11 +1,11 @@
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import GeneratedContent from "./GeneratedContent";
 import { useAuth } from "@/contexts/AuthContext";
 import ContentForm from "./content-generator/ContentForm";
-import { generateContent, GeneratedContentResponse } from "./content-generator/contentService";
+import RegenerateButton from "./content-generator/RegenerateButton";
+import { GeneratedContentResponse } from "./content-generator/contentService";
 
 const ContentGenerator = () => {
   const [generatedContent, setGeneratedContent] = useState<GeneratedContentResponse | null>(null);
@@ -72,17 +72,10 @@ const ContentGenerator = () => {
               content={generatedContent.content}
               imagePrompt={generatedContent.imagePrompt}
             />
-            <div className="flex justify-center">
-              <Button
-                onClick={handleRegenerate}
-                disabled={isLoading}
-                variant="outline"
-                size="lg"
-                className="px-8 py-3 text-lg font-semibold border-2 border-blue-500 text-blue-600 hover:bg-blue-50 shadow-md"
-              >
-                تولید مجدد
-              </Button>
-            </div>
+            <RegenerateButton
+              onRegenerate={handleRegenerate}
+              isLoading={isLoading}
+            />
           </div>
         )}
       </div>
