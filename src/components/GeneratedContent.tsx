@@ -2,8 +2,10 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Copy, FileText, Image, Download, Share2 } from 'lucide-react';
+import { Copy, FileText, Image, Download, Share2, Crown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import { checkPremiumAccess } from '@/utils/premiumUtils';
 
 interface GeneratedContentProps {
   content: string;
@@ -12,6 +14,8 @@ interface GeneratedContentProps {
 
 const GeneratedContent: React.FC<GeneratedContentProps> = ({ content, imagePrompt }) => {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const isPremium = checkPremiumAccess(user);
 
   const copyToClipboard = async (text: string, type: string) => {
     try {
@@ -31,6 +35,15 @@ const GeneratedContent: React.FC<GeneratedContentProps> = ({ content, imagePromp
   };
 
   const downloadAsText = (text: string, filename: string) => {
+    if (!isPremium) {
+      toast({
+        title: "دسترسی محدود",
+        description: "دانلود فایل فقط برای کاربران پریمیوم فعال است.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const element = document.createElement("a");
     const file = new Blob([text], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
@@ -65,6 +78,26 @@ const GeneratedContent: React.FC<GeneratedContentProps> = ({ content, imagePromp
     }).filter(Boolean);
   };
 
+  const DownloadButton = ({ onClick, children, variant = "outline", size = "sm", className = "" }) => (
+    <div className="relative">
+      <Button
+        onClick={onClick}
+        variant={variant}
+        size={size}
+        className={`${className} ${!isPremium ? 'opacity-75' : ''}`}
+        disabled={!isPremium}
+      >
+        {!isPremium && <Crown className="h-4 w-4 ml-2 text-yellow-500" />}
+        {children}
+      </Button>
+      {!isPremium && (
+        <div className="absolute -top-1 -right-1">
+          <Crown className="h-3 w-3 text-yellow-500" />
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <div dir="rtl" className="space-y-6">
       {/* محتوای تولید شده */}
@@ -92,15 +125,13 @@ const GeneratedContent: React.FC<GeneratedContentProps> = ({ content, imagePromp
                   <Copy className="h-4 w-4 ml-2" />
                   کپی
                 </Button>
-                <Button
+                <DownloadButton
                   onClick={() => downloadAsText(content, 'content.txt')}
-                  variant="outline"
-                  size="sm"
                   className="text-gray-600 hover:text-gray-800 border-gray-300 hover:border-gray-400"
                 >
                   <Download className="h-4 w-4 ml-2" />
                   دانلود
-                </Button>
+                </DownloadButton>
               </div>
             </div>
             
@@ -138,15 +169,13 @@ const GeneratedContent: React.FC<GeneratedContentProps> = ({ content, imagePromp
                   <Copy className="h-4 w-4 ml-2" />
                   کپی
                 </Button>
-                <Button
+                <DownloadButton
                   onClick={() => downloadAsText(imagePrompt, 'image-prompt.txt')}
-                  variant="outline"
-                  size="sm"
                   className="text-gray-600 hover:text-gray-800 border-gray-300 hover:border-gray-400"
                 >
                   <Download className="h-4 w-4 ml-2" />
                   دانلود
-                </Button>
+                </DownloadButton>
               </div>
             </div>
             
@@ -172,7 +201,7 @@ const GeneratedContent: React.FC<GeneratedContentProps> = ({ content, imagePromp
               کپی همه محتوا
             </Button>
             
-            <Button
+            <DownloadButton
               onClick={() => downloadAsText(`${content}\n\n--- پرامپت تصویر ---\n${imagePrompt}`, 'complete-content.txt')}
               variant="outline"
               size="lg"
@@ -180,7 +209,7 @@ const GeneratedContent: React.FC<GeneratedContentProps> = ({ content, imagePromp
             >
               <Download className="h-5 w-5 ml-2" />
               دانلود کامل
-            </Button>
+            </DownloadButton>
             
             <Button
               onClick={() => {
@@ -201,6 +230,15 @@ const GeneratedContent: React.FC<GeneratedContentProps> = ({ content, imagePromp
               اشتراک‌گذاری
             </Button>
           </div>
+          
+          {!isPremium && (
+            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+              <div className="flex items-center justify-center gap-2 text-yellow-700">
+                <Crown className="h-5 w-5" />
+                <span className="font-semibold">برای دسترسی به قابلیت دانلود، به اشتراک پریمیوم نیاز دارید</span>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

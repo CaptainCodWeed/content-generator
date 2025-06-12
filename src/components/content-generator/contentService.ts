@@ -17,13 +17,37 @@ export interface GeneratedContentResponse {
   imagePrompt: string;
 }
 
-const WEBHOOK_URL = 'http://localhost:5678/webhook-test/dc6df3e7-fcdf-41dd-a762-dcb2649fc01a';
+const WEBHOOK_URL = 'https://captaincodem.app.n8n.cloud/webhook/cedc017c-fa8d-41f4-9612-6306575ccb1e';
 
 export const generateContent = async (data: GenerateContentRequest): Promise<GeneratedContentResponse> => {
+  // Format data for ChatGPT AI agent understanding
+  const chatGPTPrompt = `
+عنوان: ${data.title}
+درخواست کاربر: ${data.prompt}
+کلمات کلیدی: ${data.keywords}
+نوع محتوا: ${data.content_type}
+زبان محتوا: ${data.content_language}
+سبک محتوا: ${data.content_style}
+نوع تصویر: ${data.image_type}
+${data.image_type !== 'no-image' ? `سبک تصویر: ${data.ai_image_style}` : ''}
+
+لطفاً محتوای مناسب تولید کن و همچنین پرامپت مناسب برای تولید تصویر ارائه بده.
+  `.trim();
+
   const requestData = {
-    table_name: "generated_content",
-    fields: data,
+    user_id: data.user_id,
+    prompt: chatGPTPrompt,
+    content_details: {
+      title: data.title,
+      content_type: data.content_type,
+      language: data.content_language,
+      style: data.content_style,
+      keywords: data.keywords,
+      image_type: data.image_type,
+      ai_image_style: data.ai_image_style
+    },
     timestamp: new Date().toISOString(),
+    isRegeneration: data.isRegeneration || false
   };
 
   console.log('Sending request to n8n webhook:', requestData);
