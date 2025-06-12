@@ -44,3 +44,14 @@ export const contentStyles = [
   "آموزشی",
   "تبلیغاتی",
 ];
+
+export const contentOptions = [
+  { value: "article", label: "مقاله" },
+  { value: "blog-post", label: "پست وبلاگ" },
+  { value: "social-media", label: "محتوای شبکه اجتماعی" },
+  { value: "product-description", label: "توضیحات محصول" },
+  { value: "email", label: "ایمیل تبلیغاتی" },
+  { value: "story", label: "داستان" },
+  { value: "poem", label: "شعر" },
+  { value: "summary", label: "خلاصه" },
+];

@@ -5,6 +5,7 @@ import GeneratedContent from "./GeneratedContent";
 import { useAuth } from "@/contexts/AuthContext";
 import ContentForm from "./content-generator/ContentForm";
 import RegenerateButton from "./content-generator/RegenerateButton";
+import UserHistory from "./content-generator/UserHistory";
 import { GeneratedContentResponse } from "./content-generator/contentService";
 
 const ContentGenerator = () => {
@@ -18,6 +19,26 @@ const ContentGenerator = () => {
     setGeneratedContent(content);
   };
 
+  const handleSelectHistory = (historyItem: any) => {
+    if (historyItem.content && historyItem.imagePrompt) {
+      setGeneratedContent({
+        content: historyItem.content,
+        imagePrompt: historyItem.imagePrompt,
+      });
+      
+      toast({
+        title: "بارگذاری تاریخچه",
+        description: "محتوای قبلی با موفقیت بارگذاری شد",
+      });
+    } else {
+      toast({
+        title: "اطلاعات",
+        description: "این درخواست هنوز پردازش نشده است",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleRegenerate = async () => {
     if (!generatedContent) return;
 
@@ -25,8 +46,6 @@ const ContentGenerator = () => {
     setError("");
 
     try {
-      // We need to get the form data from somewhere for regeneration
-      // For now, we'll just show a message to the user
       toast({
         title: "اطلاعات",
         description: "برای تولید مجدد، لطفاً فرم را دوباره پر کنید و دکمه تولید محتوا را بزنید.",
@@ -63,6 +82,8 @@ const ContentGenerator = () => {
             با استفاده از قدرت هوش مصنوعی، محتوای باکیفیت و جذاب بسازید
           </p>
         </div>
+
+        <UserHistory onSelectHistory={handleSelectHistory} />
 
         <ContentForm onContentGenerated={handleContentGenerated} />
 

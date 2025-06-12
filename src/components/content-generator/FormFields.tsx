@@ -2,15 +2,16 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FileText, Globe, Image, Palette } from "lucide-react";
-import { imageTypes, aiImageStyles, contentLanguages, contentStyles } from "./constants";
+import { FileText, Globe, Image, Palette, MessageSquare, List } from "lucide-react";
+import { imageTypes, aiImageStyles, contentLanguages, contentStyles, contentOptions } from "./constants";
 
 interface FormFieldsProps {
   title: string;
   setTitle: (value: string) => void;
-  headings: string;
-  setHeadings: (value: string) => void;
+  prompt: string;
+  setPrompt: (value: string) => void;
   keywords: string;
   setKeywords: (value: string) => void;
   imageType: string;
@@ -21,13 +22,15 @@ interface FormFieldsProps {
   setContentLanguage: (value: string) => void;
   contentStyle: string;
   setContentStyle: (value: string) => void;
+  contentType: string;
+  setContentType: (value: string) => void;
 }
 
 const FormFields: React.FC<FormFieldsProps> = ({
   title,
   setTitle,
-  headings,
-  setHeadings,
+  prompt,
+  setPrompt,
   keywords,
   setKeywords,
   imageType,
@@ -38,6 +41,8 @@ const FormFields: React.FC<FormFieldsProps> = ({
   setContentLanguage,
   contentStyle,
   setContentStyle,
+  contentType,
+  setContentType,
 }) => {
   return (
     <div className="grid md:grid-cols-2 gap-6">
@@ -58,17 +63,36 @@ const FormFields: React.FC<FormFieldsProps> = ({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="headings" className="text-lg font-semibold">
-          عناوین فرعی
+        <Label className="text-lg font-semibold flex items-center gap-2">
+          <List className="h-4 w-4" />
+          نوع محتوا
         </Label>
-        <Input
-          type="text"
-          id="headings"
-          value={headings}
-          onChange={(e) => setHeadings(e.target.value)}
-          placeholder="عناوین فرعی را با کاما جدا کنید..."
+        <Select value={contentType} onValueChange={setContentType}>
+          <SelectTrigger className="h-12 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-xl">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {contentOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="md:col-span-2 space-y-2">
+        <Label htmlFor="prompt" className="text-lg font-semibold flex items-center gap-2">
+          <MessageSquare className="h-4 w-4" />
+          درخواست یا پرامپت
+        </Label>
+        <Textarea
+          id="prompt"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          placeholder="درخواست خود را به تفصیل بنویسید..."
           required
-          className="h-12 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-xl"
+          className="min-h-[120px] text-lg border-2 border-gray-200 focus:border-blue-500 rounded-xl resize-none"
         />
       </div>
 

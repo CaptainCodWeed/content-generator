@@ -2,12 +2,13 @@
 interface GenerateContentRequest {
   user_id: string | undefined;
   title: string;
-  headings: string;
+  prompt: string;
   keywords: string;
   image_type: string;
   ai_image_style: string;
   content_language: string;
   content_style: string;
+  content_type: string;
   isRegeneration?: boolean;
 }
 

@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Sparkles } from "lucide-react";
 import FormFields from "./FormFields";
 import { generateContent, GeneratedContentResponse } from "./contentService";
-import { imageTypes, aiImageStyles, contentLanguages, contentStyles } from "./constants";
+import { imageTypes, aiImageStyles, contentLanguages, contentStyles, contentOptions } from "./constants";
 
 interface ContentFormProps {
   onContentGenerated: (content: GeneratedContentResponse) => void;
@@ -15,12 +15,13 @@ interface ContentFormProps {
 
 export const ContentForm: React.FC<ContentFormProps> = ({ onContentGenerated }) => {
   const [title, setTitle] = useState("");
-  const [headings, setHeadings] = useState("");
+  const [prompt, setPrompt] = useState("");
   const [keywords, setKeywords] = useState("");
   const [imageType, setImageType] = useState(imageTypes[0].value);
   const [aiImageStyle, setAiImageStyle] = useState(aiImageStyles[0].value);
   const [contentLanguage, setContentLanguage] = useState(contentLanguages[0].value);
   const [contentStyle, setContentStyle] = useState(contentStyles[0]);
+  const [contentType, setContentType] = useState(contentOptions[0].value);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const { toast } = useToast();
@@ -35,12 +36,13 @@ export const ContentForm: React.FC<ContentFormProps> = ({ onContentGenerated }) 
       const result = await generateContent({
         user_id: user?.id,
         title,
-        headings,
+        prompt,
         keywords,
         image_type: imageType,
         ai_image_style: aiImageStyle,
         content_language: contentLanguage,
         content_style: contentStyle,
+        content_type: contentType,
       });
 
       onContentGenerated(result);
@@ -83,8 +85,8 @@ export const ContentForm: React.FC<ContentFormProps> = ({ onContentGenerated }) 
           <FormFields
             title={title}
             setTitle={setTitle}
-            headings={headings}
-            setHeadings={setHeadings}
+            prompt={prompt}
+            setPrompt={setPrompt}
             keywords={keywords}
             setKeywords={setKeywords}
             imageType={imageType}
@@ -95,6 +97,8 @@ export const ContentForm: React.FC<ContentFormProps> = ({ onContentGenerated }) 
             setContentLanguage={setContentLanguage}
             contentStyle={contentStyle}
             setContentStyle={setContentStyle}
+            contentType={contentType}
+            setContentType={setContentType}
           />
 
           <div className="flex justify-center pt-6">
