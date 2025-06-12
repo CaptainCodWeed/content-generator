@@ -6,6 +6,7 @@ import { Copy, FileText, Image, Download, Share2, Crown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { checkPremiumAccess } from '@/utils/premiumUtils';
+import type { ButtonProps } from '@/components/ui/button';
 
 interface GeneratedContentProps {
   content: string;
@@ -78,7 +79,21 @@ const GeneratedContent: React.FC<GeneratedContentProps> = ({ content, imagePromp
     }).filter(Boolean);
   };
 
-  const DownloadButton = ({ onClick, children, variant = "outline", size = "sm", className = "" }) => (
+  interface DownloadButtonProps {
+    onClick: () => void;
+    children: React.ReactNode;
+    variant?: ButtonProps['variant'];
+    size?: ButtonProps['size'];
+    className?: string;
+  }
+
+  const DownloadButton: React.FC<DownloadButtonProps> = ({ 
+    onClick, 
+    children, 
+    variant = "outline", 
+    size = "sm", 
+    className = "" 
+  }) => (
     <div className="relative">
       <Button
         onClick={onClick}
