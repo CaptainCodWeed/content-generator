@@ -20,20 +20,26 @@ const ContentGenerator = () => {
   };
 
   const handleSelectHistory = (historyItem: any) => {
-    if (historyItem.content && historyItem.imagePrompt) {
+    if (historyItem.generated_content && historyItem.image_prompt && historyItem.status === 'completed') {
       setGeneratedContent({
-        content: historyItem.content,
-        imagePrompt: historyItem.imagePrompt,
+        content: historyItem.generated_content,
+        imagePrompt: historyItem.image_prompt,
       });
       
       toast({
         title: "بارگذاری تاریخچه",
         description: "محتوای قبلی با موفقیت بارگذاری شد",
       });
+    } else if (historyItem.status === 'pending') {
+      toast({
+        title: "اطلاعات",
+        description: "این درخواست هنوز در حال پردازش است",
+        variant: "destructive",
+      });
     } else {
       toast({
         title: "اطلاعات",
-        description: "این درخواست هنوز پردازش نشده است",
+        description: "این درخواست هنوز تکمیل نشده است",
         variant: "destructive",
       });
     }
@@ -54,9 +60,7 @@ const ContentGenerator = () => {
       console.error('Error in handleRegenerate:', err);
       let errorMessage = 'خطای نامشخص رخ داد';
       
-      if (err instanceof TypeError && err.message.includes('fetch')) {
-        errorMessage = 'خطا در اتصال به سرور. لطفاً اتصال اینترنت خود را بررسی کنید.';
-      } else if (err instanceof Error) {
+      if (err instanceof Error) {
         errorMessage = err.message;
       }
       
