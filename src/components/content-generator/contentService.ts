@@ -11,12 +11,14 @@ interface GenerateContentRequest {
   content_language: string;
   content_style: string;
   content_type: string;
+  video_enabled?: boolean;
   isRegeneration?: boolean;
 }
 
 export interface GeneratedContentResponse {
   content: string;
-  imagePrompt: string;
+  imageUrl?: string;
+  videoUrl?: string;
 }
 
 export const generateContent = async (data: GenerateContentRequest): Promise<GeneratedContentResponse> => {
@@ -37,6 +39,7 @@ export const generateContent = async (data: GenerateContentRequest): Promise<Gen
       content_language: data.content_language,
       content_style: data.content_style,
       content_type: data.content_type,
+      video_enabled: data.video_enabled || false,
       status: 'pending'
     })
     .select()
@@ -47,7 +50,7 @@ export const generateContent = async (data: GenerateContentRequest): Promise<Gen
     throw new Error('خطا در ایجاد درخواست');
   }
 
-  // شبیه‌سازی تولید محتوا (در پیاده‌سازی واقعی، این باید به API هوش مصنوعی متصل شود)
+  // شبیه‌سازی تولید محتوا
   const simulatedContent = generateSimulatedContent(data);
   
   // به‌روزرسانی درخواست با محتوای تولید شده
@@ -55,7 +58,8 @@ export const generateContent = async (data: GenerateContentRequest): Promise<Gen
     .from('content_requests')
     .update({
       generated_content: simulatedContent.content,
-      image_prompt: simulatedContent.imagePrompt,
+      generated_image: simulatedContent.imageUrl,
+      generated_video: simulatedContent.videoUrl,
       status: 'completed',
       updated_at: new Date().toISOString()
     })
@@ -74,6 +78,8 @@ function generateSimulatedContent(data: GenerateContentRequest): GeneratedConten
   const contentTemplates = {
     'article': `# ${data.title}
 
+![تصویر مرتبط با ${data.title}](https://picsum.photos/800/400?random=${Math.floor(Math.random() * 1000)})
+
 در دنیای امروز، ${data.keywords} نقش مهمی در زندگی ما ایفا می‌کند. این مقاله به بررسی جوانب مختلف این موضوع می‌پردازد.
 
 ## مقدمه
@@ -87,7 +93,7 @@ ${data.prompt} یکی از مسائل مهم عصر حاضر است که توج�
 ### نکات کلیدی
 
 - اهمیت موضوع در جامعه امروز
-- تأثیرات مثبت و منفی
+- تأثیرات مثبت و منفی  
 - راه‌حل‌های پیشنهادی
 
 ## نتیجه‌گیری
@@ -95,6 +101,8 @@ ${data.prompt} یکی از مسائل مهم عصر حاضر است که توج�
 در نهایت، می‌توان گفت که ${data.title} موضوعی است که نیاز به توجه بیشتر دارد و امیدواریم این مقاله بتواند نگاهی جامع به این مسئله ارائه دهد.`,
 
     'social-media': `🌟 ${data.title} 🌟
+
+![${data.title}](https://picsum.photos/600/600?random=${Math.floor(Math.random() * 1000)})
 
 ${data.prompt}
 
@@ -104,6 +112,8 @@ ${data.keywords.split(',').map(keyword => `• ${keyword.trim()}`).join('\n')}
 #محتوای_جذاب #${data.keywords.replace(/,/g, ' #')}`,
 
     'story': `# ${data.title}
+
+![صحنه‌ای از داستان](https://picsum.photos/700/400?random=${Math.floor(Math.random() * 1000)})
 
 ${data.prompt}
 
@@ -117,13 +127,18 @@ ${data.prompt}
   const content = contentTemplates[data.content_type as keyof typeof contentTemplates] || 
     contentTemplates['article'];
 
-  const imagePrompt = data.image_type !== 'no-image' 
-    ? `تصویری ${data.ai_image_style} از ${data.title}، ${data.keywords}، با کیفیت بالا و جزئیات دقیق`
-    : 'بدون تصویر';
+  const imageUrl = data.image_type !== 'no-image' 
+    ? `https://picsum.photos/800/400?random=${Math.floor(Math.random() * 1000)}`
+    : undefined;
+
+  const videoUrl = data.video_enabled 
+    ? `https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4?random=${Math.floor(Math.random() * 1000)}`
+    : undefined;
 
   return {
     content,
-    imagePrompt
+    imageUrl,
+    videoUrl
   };
 }
 

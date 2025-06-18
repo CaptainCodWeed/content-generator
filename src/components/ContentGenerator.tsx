@@ -20,10 +20,11 @@ const ContentGenerator = () => {
   };
 
   const handleSelectHistory = (historyItem: any) => {
-    if (historyItem.generated_content && historyItem.image_prompt && historyItem.status === 'completed') {
+    if (historyItem.generated_content && historyItem.status === 'completed') {
       setGeneratedContent({
         content: historyItem.generated_content,
-        imagePrompt: historyItem.image_prompt,
+        imageUrl: historyItem.generated_image,
+        videoUrl: historyItem.generated_video,
       });
       
       toast({
@@ -95,7 +96,8 @@ const ContentGenerator = () => {
           <div className="space-y-6">
             <GeneratedContent
               content={generatedContent.content}
-              imagePrompt={generatedContent.imagePrompt}
+              imageUrl={generatedContent.imageUrl}
+              videoUrl={generatedContent.videoUrl}
             />
             <RegenerateButton
               onRegenerate={handleRegenerate}

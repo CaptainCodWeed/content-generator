@@ -17,6 +17,8 @@ export type Database = {
           content_type: string
           created_at: string
           generated_content: string | null
+          generated_image: string | null
+          generated_video: string | null
           id: string
           image_prompt: string | null
           image_type: string
@@ -26,6 +28,7 @@ export type Database = {
           title: string
           updated_at: string
           user_id: string
+          video_enabled: boolean | null
         }
         Insert: {
           ai_image_style: string
@@ -34,6 +37,8 @@ export type Database = {
           content_type: string
           created_at?: string
           generated_content?: string | null
+          generated_image?: string | null
+          generated_video?: string | null
           id?: string
           image_prompt?: string | null
           image_type: string
@@ -43,6 +48,7 @@ export type Database = {
           title: string
           updated_at?: string
           user_id: string
+          video_enabled?: boolean | null
         }
         Update: {
           ai_image_style?: string
@@ -51,6 +57,8 @@ export type Database = {
           content_type?: string
           created_at?: string
           generated_content?: string | null
+          generated_image?: string | null
+          generated_video?: string | null
           id?: string
           image_prompt?: string | null
           image_type?: string
@@ -60,6 +68,7 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+          video_enabled?: boolean | null
         }
         Relationships: []
       }
@@ -70,6 +79,8 @@ export type Database = {
           content_style: string
           created_at: string
           generated_content: string | null
+          generated_image: string | null
+          generated_video: string | null
           headings: string | null
           id: string
           image_prompt: string | null
@@ -78,6 +89,7 @@ export type Database = {
           title: string
           updated_at: string
           user_id: string
+          video_enabled: boolean | null
           webhook_response: Json | null
         }
         Insert: {
@@ -86,6 +98,8 @@ export type Database = {
           content_style: string
           created_at?: string
           generated_content?: string | null
+          generated_image?: string | null
+          generated_video?: string | null
           headings?: string | null
           id?: string
           image_prompt?: string | null
@@ -94,6 +108,7 @@ export type Database = {
           title: string
           updated_at?: string
           user_id: string
+          video_enabled?: boolean | null
           webhook_response?: Json | null
         }
         Update: {
@@ -102,6 +117,8 @@ export type Database = {
           content_style?: string
           created_at?: string
           generated_content?: string | null
+          generated_image?: string | null
+          generated_video?: string | null
           headings?: string | null
           id?: string
           image_prompt?: string | null
@@ -110,6 +127,7 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+          video_enabled?: boolean | null
           webhook_response?: Json | null
         }
         Relationships: []

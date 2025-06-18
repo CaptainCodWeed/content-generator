@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sparkles } from "lucide-react";
 import FormFields from "./FormFields";
+import VideoToggle from "./VideoToggle";
 import { generateContent, GeneratedContentResponse } from "./contentService";
 import { imageTypes, aiImageStyles, contentLanguages, contentStyles, contentOptions } from "./constants";
 
@@ -22,6 +23,7 @@ export const ContentForm: React.FC<ContentFormProps> = ({ onContentGenerated }) 
   const [contentLanguage, setContentLanguage] = useState(contentLanguages[0].value);
   const [contentStyle, setContentStyle] = useState(contentStyles[0]);
   const [contentType, setContentType] = useState(contentOptions[0].value);
+  const [videoEnabled, setVideoEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const { toast } = useToast();
@@ -43,6 +45,7 @@ export const ContentForm: React.FC<ContentFormProps> = ({ onContentGenerated }) 
         content_language: contentLanguage,
         content_style: contentStyle,
         content_type: contentType,
+        video_enabled: videoEnabled,
       });
 
       onContentGenerated(result);
@@ -99,6 +102,11 @@ export const ContentForm: React.FC<ContentFormProps> = ({ onContentGenerated }) 
             setContentStyle={setContentStyle}
             contentType={contentType}
             setContentType={setContentType}
+          />
+
+          <VideoToggle 
+            videoEnabled={videoEnabled}
+            onVideoToggle={setVideoEnabled}
           />
 
           <div className="flex justify-center pt-6">

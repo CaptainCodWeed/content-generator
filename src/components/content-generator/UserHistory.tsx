@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { History, Eye, Clock, ChevronDown, ChevronUp } from "lucide-react";
+import { History, Eye, Clock, ChevronDown, ChevronUp, Video } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { getUserContentHistory } from "./contentService";
 import { useToast } from "@/hooks/use-toast";
@@ -14,7 +14,9 @@ interface HistoryItem {
   content_type: string;
   created_at: string;
   generated_content?: string;
-  image_prompt?: string;
+  generated_image?: string;
+  generated_video?: string;
+  video_enabled?: boolean;
   status: string;
 }
 
@@ -141,6 +143,12 @@ const UserHistory: React.FC<UserHistoryProps> = ({ onSelectHistory }) => {
                         <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(item.status)}`}>
                           {getStatusLabel(item.status)}
                         </span>
+                        {item.video_enabled && (
+                          <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full flex items-center gap-1">
+                            <Video className="h-3 w-3" />
+                            ویدیو
+                          </span>
+                        )}
                       </div>
                       
                       <Button

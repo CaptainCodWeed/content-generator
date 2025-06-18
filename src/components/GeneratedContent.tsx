@@ -4,15 +4,16 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { checkPremiumAccess } from '@/utils/premiumUtils';
 import ContentCard from './content-generator/ContentCard';
-import ImagePromptCard from './content-generator/ImagePromptCard';
+import VideoCard from './content-generator/VideoCard';
 import ActionButtons from './content-generator/ActionButtons';
 
 interface GeneratedContentProps {
   content: string;
-  imagePrompt: string;
+  imageUrl?: string;
+  videoUrl?: string;
 }
 
-const GeneratedContent: React.FC<GeneratedContentProps> = ({ content, imagePrompt }) => {
+const GeneratedContent: React.FC<GeneratedContentProps> = ({ content, imageUrl, videoUrl }) => {
   const { toast } = useToast();
   const { user } = useAuth();
   const isPremium = checkPremiumAccess(user);
@@ -77,15 +78,17 @@ const GeneratedContent: React.FC<GeneratedContentProps> = ({ content, imagePromp
         onDownload={downloadAsText}
       />
 
-      <ImagePromptCard
-        imagePrompt={imagePrompt}
-        onCopy={copyToClipboard}
-        onDownload={downloadAsText}
-      />
+      {videoUrl && (
+        <VideoCard
+          videoUrl={videoUrl}
+          onCopy={copyToClipboard}
+          onDownload={downloadAsText}
+        />
+      )}
 
       <ActionButtons
         content={content}
-        imagePrompt={imagePrompt}
+        videoUrl={videoUrl}
         onCopy={copyToClipboard}
         onDownload={downloadAsText}
         onShare={handleShare}

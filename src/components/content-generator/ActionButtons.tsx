@@ -9,7 +9,7 @@ import DownloadButton from './DownloadButton';
 
 interface ActionButtonsProps {
   content: string;
-  imagePrompt: string;
+  videoUrl?: string;
   onCopy: (text: string, type: string) => void;
   onDownload: (text: string, filename: string) => void;
   onShare: () => void;
@@ -17,14 +17,16 @@ interface ActionButtonsProps {
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({ 
   content, 
-  imagePrompt, 
+  videoUrl, 
   onCopy, 
   onDownload, 
   onShare 
 }) => {
   const { user } = useAuth();
   const isPremium = checkPremiumAccess(user);
-  const fullContent = `${content}\n\n--- پرامپت تصویر ---\n${imagePrompt}`;
+  const fullContent = videoUrl 
+    ? `${content}\n\n--- لینک ویدیو ---\n${videoUrl}`
+    : content;
 
   return (
     <Card className="shadow-xl border-0 bg-gradient-to-r from-blue-50 to-purple-50">
@@ -64,7 +66,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
             <div className="flex items-center justify-center gap-2 text-yellow-700">
               <Crown className="h-5 w-5" />
-              <span className="font-semibold">برای دسترسی به قابلیت دانلود، به اشتراک پریمیوم نیاز دارید</span>
+              <span className="font-semibold">برای دسترسی به قابلیت‌های پریمیوم، به اشتراک پریمیوم نیاز دارید</span>
             </div>
           </div>
         )}
